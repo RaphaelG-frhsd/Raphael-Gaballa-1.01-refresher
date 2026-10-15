@@ -1,4 +1,5 @@
-// Helper function: writes any HTML into the #out div
+
+ // Helper function: writes any HTML into the #out div
 function render (html) {
   document.getElementById('out').innerHTML = html
 }
@@ -12,6 +13,12 @@ function render (html) {
 */
 function greet () {
   // TODO: Write your code here
+  const userName = prompt('What is your name?')
+  if (!userName || userName.trim() === '') {
+    render(`<p>Hello there!</p>`)
+    return
+  }
+  render(`<p>Hello ${userName}!</p>`)
 }
 
 /* 
@@ -24,17 +31,61 @@ function greet () {
 */
 function averageNumbers () {
   // TODO: Write your code here
+  const nums = prompt('Enter a list of numbers, separated by commas:')
+
+  if (!nums || nums.trim() === '') {
+    render("<p class='text-muted'>No numbers entered.</p>")
+    return``
+  }
+
+  const numArray = nums
+    .split(',')
+    .map(num => num.trim())
+    .filter(num => num !== '')
+    .map(num => Number(num))
+    .filter(num => Number.isFinite(num))
+
+  if (numArray.length === 0) {
+    render("<p class='text-muted'>No valid numbers entered.</p>")
+    return
+  }
+
+  const sum = numArray.reduce((acc, curr) => acc + curr, 0)
+  const average = sum / numArray.length
+
+  render(`
+    <p>The average of [${numArray.join(', ')}] is ${average}.</p>
+    <p>Average: <strong>${average}</strong></p>
+    <ul class="list-group">
+      ${numArray.map(num => `<li class="list-group-item">${num}</li>`).join('')}
+    </ul>
+  `)
 }
 
 /* 
   Function 3 — timeOfDay()
-  -------------------------
+  ------------------------- 
   - Get the current hour from the computer clock
   - Decide whether it's morning, afternoon, or evening
   - Display a message like "Good morning!" 
 */
 function timeOfDay () {
-  // TODO: Write your code here
+  const now = new Date()
+  const hour = now.getHours()
+
+  let msg = ''
+
+  if (hour < 12) {
+    msg = 'Good morning!'
+  } else if (hour < 15) {
+    msg = 'Good afternoon!'
+  } else if (hour < 18) {
+    msg = 'Good evening!'
+  } else {
+    msg = 'Good night!'
+  }
+
+  render(`<p>${msg}</p>`)
 }
 
 /* 
@@ -47,6 +98,30 @@ function timeOfDay () {
 */
 function randomBetween () {
   // TODO: Write your code here
+  const minInput = prompt('Enter the minimum number:')
+  const maxInput = prompt('Enter the maximum number:')
+
+  if (
+    minInput === null ||
+    maxInput === null ||
+    minInput.trim() === '' ||
+    maxInput.trim() === ''
+  ) {
+    render("<p class='text-muted'>Please enter both numbers.</p>")
+    return
+  }
+
+  const min = Number(minInput)
+  const max = Number(maxInput)
+
+  if (!Number.isFinite(min) || !Number.isFinite(max) || min >= max) {
+    render('<p>Please enter valid numbers, with the minimum less than the maximum.</p>')
+    return
+  }
+
+  const random = Math.floor(Math.random() * (max - min + 1)) + min
+
+  render(`<p>Random number: <strong>${random}</strong></p>`)
 }
 
 /* 
@@ -57,6 +132,7 @@ function randomBetween () {
 */
 function clearOutput () {
   // TODO: Write your code here
+  render("<p class='text-muted'>Output cleared.</p>")
 }
 
 // ---- Event listeners for the demo buttons ----
